@@ -1,16 +1,16 @@
-## K-Nearest Neighbors (KNN) 
+# K-Nearest Neighbors (KNN) 
 
-### Description 
+## Description 
 
 K-Nearest Neighbors (KNN) is one of the simplest machine learning algorithms, primarily used for classification tasks. Given a set of labeled data points and a new, unlabeled point, KNN aims to assign a label to the new point based on the majority label of its 'k' nearest neighbors.
 
-### How it Works 
+## How it Works 
 
 1. **Compute Distance**: Calculate the distance between the unlabeled point and each of the labeled points. Various distance metrics like Euclidean, Manhattan, etc., can be used.
 2. **Sort and Select**: Sort these distances, and select the 'k' nearest labeled points.
 3. **Majority Voting**: Use majority voting to assign a label to the unlabeled point based on the most frequent label among the 'k' neighbors.
 
-### Code Example (C++) 
+## Code Example (C++) 
 
 Here's how the specific C++ code implements KNN:
 
