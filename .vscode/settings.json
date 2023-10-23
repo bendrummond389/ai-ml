@@ -4,5 +4,6 @@
     "map": "cpp",
     "istream": "cpp",
     "streambuf": "cpp"
-  }
+  },
+  "C_Cpp.default.compilerPath": "/usr/bin/clang++"
 }
