@@ -34,8 +34,8 @@ J(\theta) = \frac{1}{2m} \sum_{i = 1}^{m}(h_{\theta}(x^{(i)} ) - y^{(i)})^2
 where:
 
 - \(m\) is the number of training examples.
-- \( h_{\theta}(x^{(i)} )\) is the predicted output of the i-th training example.
-- \(y^{(i)}\) is the actual output of the i-th training example
+- \( h_{\theta}(x^{(i)} )\) is the predicted output of the \(i^{th} \) training example.
+- \(y^{(i)}\) is the actual output of the \(i^{th} \) training example
   
 The goal of linear regression is to find values for \(\theta\) that minimize our cost function.
 
@@ -50,8 +50,8 @@ To minimize the cost function, we use the gradient descent algorithm:
 For all \(j\), where:
 
 - \( \alpha \) is the learning rate.
-- \( \theta_j \) is the j-th model parameter.
-- \(x_{j}^{(i)}\) is the j-th feature of the i-th training example.
+- \( \theta_j \) is the \(j^{th} \) model parameter.
+- \(x_{j}^{(i)}\) is the \(j^{th} \) feature of the \(i^{th} \) training example.
 
 ## C++ Implementation
 
@@ -99,3 +99,31 @@ h_m
 \theta_1 \\
 \end{bmatrix}
 \]
+
+#### SquaredNorm of the error
+
+Through vector subtraction, we can efficiently compute the error for each hypothesis outcome. Here, \(h_i \) denotes the prediction using the \(i^{th} \) value of x
+
+\[
+E = \begin{bmatrix}
+h_1 \\
+h_2 \\
+h_3 \\
+\vdots\\
+h_m
+\end{bmatrix} - \begin{bmatrix}
+y_1 \\
+y_2 \\
+y_3 \\
+\vdots\\
+y_m
+\end{bmatrix}
+\]
+
+With this error vector \(E\), the cost can be succinctly determined as:
+
+\[
+  J(\theta) = \frac{||E||}{2m}
+\]
+
+This approach leverages Eigen's squaredNorm() method, offering both clarity and computational efficiency.
