@@ -104,5 +104,7 @@ int main() {
   lr.displayTheta();
   std::cout << "\n------------------------\n";
 
+  lr.displayX();
+
   return 0;
 }
