@@ -60,6 +60,33 @@ void LogisticRegression::displayX() {
 void LogisticRegression::displayY() {
   std::cout << "Y matrix (actual output values): \n" << y << std::endl;
 }
+void LogisticRegression::displayTheta() {
+  std::cout << "Theta values (coefficents): \n" << theta << std::endl;
+}
+
+Eigen::VectorXd LogisticRegression::sigmoid(const Eigen::VectorXd &z) {
+  return 1.0 / (1.0 + (-z.array()).exp());
+}
+
+double LogisticRegression::computeCost() {
+  Eigen::VectorXd h = sigmoid(x * theta);
+
+  double cost =
+      -(y.array() * h.array().log() + (1 - y.array()) * (1 - h.array()).log())
+           .mean();
+
+  return cost;
+}
+
+void LogisticRegression::gradientDescent(double alpha, int iterations) {
+  for (int iter = 0; iter < iterations; iter++) {
+    Eigen::VectorXd h = sigmoid(x * theta);
+
+    Eigen::VectorXd gradient = (x.transpose() * (h - y)) / m;
+
+    theta = theta - alpha * gradient;
+  }
+}
 
 int main() {
   // Sample dataset
@@ -69,15 +96,27 @@ int main() {
   Eigen::VectorXd y(5);
   y << 0, 1, 0, 1, 0;
 
-  // Create an instance of the LogisticRegression class
+
   LogisticRegression lr;
 
-  // Input the data into the model
+
   lr.input(X, y);
 
-  // Display the modified input features matrix
   lr.displayX();
   lr.displayY();
+
+
+  std::cout << "Initial cost: \n" << lr.computeCost() << std::endl;
+
+  double alpha = 0.01; 
+  int iterations = 1000;
+  lr.gradientDescent(alpha, iterations);
+
+  std::cout << "Theta after gradient descent: \n";
+  lr.displayTheta();
+
+  std::cout << "Cost after gradient descent: \n"
+            << lr.computeCost() << std::endl;
 
   return 0;
 }
