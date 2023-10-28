@@ -22,3 +22,18 @@ void NeuralNetwork::addLayer(int neurons, double (*activation)(double)) {
 
   layers.push_back(newLayer);
 }
+
+Eigen::VectorXd NeuralNetwork::forwardPass(const Eigen::VectorXd &inputData) {
+  Eigen::VectorXd currentOutput = inputData;
+
+  for (Layer &layer : layers) {
+
+    Eigen::VectorXd z =
+        layer.weights.transpose() * currentOutput + layer.biases;
+
+    currentOutput =
+        z.unaryExpr([&](double val) { return layer.activationFunction(val); });
+  }
+
+  return currentOutput;
+}

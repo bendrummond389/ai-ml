@@ -7,6 +7,7 @@ class NeuralNetwork {
 public:
   NeuralNetwork(int inputNeurons);
   void addLayer(int neurons, double (*activation)(double));
+  Eigen::VectorXd forwardPass(const Eigen::VectorXd &inputData);
 
 private:
   struct Layer {
@@ -20,3 +21,4 @@ private:
   int inputNeurons;
   std::vector<Layer> layers;
 };
+

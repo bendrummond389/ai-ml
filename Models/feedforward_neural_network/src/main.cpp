@@ -20,18 +20,12 @@ int main() {
   std::cout << "Neural Network initialized with a hidden layer of 128 neurons."
             << std::endl;
 
-  for (int img_idx = 0; img_idx < 5; ++img_idx) {
-    Eigen::MatrixXd image = images.row(img_idx);
-    image.resize(28, 28); 
+  // Test forward pass using the first image in the dataset
+  Eigen::VectorXd sample = images.row(0);
+  Eigen::VectorXd output = nn.forwardPass(sample);
 
-    for (int i = 0; i < 28; ++i) {
-      for (int j = 0; j < 28; ++j) {
-        std::cout << (image(i, j) > 0.5 ? "#" : " ");
-      }
-      std::cout << std::endl;
-    }
-    std::cout << "-----------------------------------------" << std::endl;
-  }
+  std::cout << "Output from forward pass for the first sample: \n"
+            << output << std::endl;
 
   return 0;
 }
