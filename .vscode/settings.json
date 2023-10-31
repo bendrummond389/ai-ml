@@ -65,7 +65,11 @@
     "unordered_map": "cpp",
     "variant": "cpp",
     "algorithm": "cpp",
-    "dense": "cpp"
+    "dense": "cpp",
+    "fstream": "cpp",
+    "iomanip": "cpp",
+    "numeric": "cpp",
+    "stack": "cpp"
   },
   "C_Cpp.default.compilerPath": "/usr/bin/clang++"
 }
