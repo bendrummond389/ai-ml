@@ -4,3 +4,5 @@ Roadmap.md
 
 Models/feedforward_neural_network/data
 Models/feedforward_neural_network/build
+Models/convolutional_neural_network/lib
+Models/convolutional_neural_network/bin
