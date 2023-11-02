@@ -6,3 +6,5 @@ Models/feedforward_neural_network/data
 Models/feedforward_neural_network/build
 Models/convolutional_neural_network/lib
 Models/convolutional_neural_network/bin
+Models/convolutional_neural_network/models/__pycache__/cnn_model.cpython-310.pyc
+Models/convolutional_neural_network/__pycache__/train.cpython-310.pyc
