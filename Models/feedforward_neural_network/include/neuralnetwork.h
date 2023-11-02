@@ -25,6 +25,16 @@ public:
                               const ForwardPassData &fpData);
   void backpropagate(const Eigen::VectorXd &targetOutput,
                      const ForwardPassData &fpData);
+  void
+  batchBackPropagate(const std::vector<Eigen::VectorXd> &batchInputData,
+                     const std::vector<Eigen::VectorXd> &batchTargetOutput);
+
+  Eigen::VectorXd computeBatchOutputError(
+      const std::vector<Eigen::VectorXd> &batchTargetOutput,
+      const std::vector<ForwardPassData> &forwardPassResults);
+  std::vector<Eigen::MatrixXd>
+  propagateBatchErrorBackward(const Eigen::MatrixXd &batchOutputErrors,
+                              const std::vector<ForwardPassData> &batchFpData);
 
 private:
   int inputNeurons;

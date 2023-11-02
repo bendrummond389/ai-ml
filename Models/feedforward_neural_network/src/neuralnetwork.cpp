@@ -113,3 +113,114 @@ void NeuralNetwork::backpropagate(const Eigen::VectorXd &targetOutput,
       propagateErrorBackward(outputError, fpData);
   updateWeightsAndBiases(layerErrors, fpData);
 }
+
+void NeuralNetwork::batchBackPropagate(
+    const std::vector<Eigen::VectorXd> &batchInputData,
+    const std::vector<Eigen::VectorXd> &batchTargetOutput) {
+
+  // Initialize a vector to store ForwardPassData for each input in the batch
+  std::vector<ForwardPassData> forwardPassResults;
+  forwardPassResults.reserve(batchInputData.size());
+
+  // Assuming the last layer of the network is accessible and we can get its
+  // output size
+  int outputLayerNeurons = this->layers.back().getOutputSize();
+
+  // Matrix to store all the output errors for the batch
+  Eigen::MatrixXd batchOutputErrors(outputLayerNeurons, batchInputData.size());
+
+  // Loop through each input in the batch to perform a forward pass
+  for (size_t i = 0; i < batchInputData.size(); ++i) {
+    forwardPassResults.push_back(this->forwardPass(batchInputData[i]));
+    // Get the activated output from the last layer
+    Eigen::VectorXd activatedOutput =
+        forwardPassResults[i].activatedOutputs.back();
+    // Compute the output error for each sample
+    batchOutputErrors.col(i) = activatedOutput - batchTargetOutput[i];
+  }
+
+  // Now, propagate the errors backward
+  // [The function propagateBatchErrorBackward needs to be defined to handle the
+  // error propagation]
+
+  // Accumulate gradients for weights and biases here
+  // [You'll need to implement the logic for this part]
+
+  // Update weights and biases here
+  // [You'll need to implement the logic for this part]
+
+  // Output the average error for logging purposes
+  Eigen::VectorXd averageError = batchOutputErrors.rowwise().mean();
+  std::cout << "Average Error for the batch:" << std::endl
+            << averageError << std::endl;
+}
+
+Eigen::VectorXd NeuralNetwork::computeBatchOutputError(
+    const std::vector<Eigen::VectorXd> &batchTargetOutput,
+    const std::vector<ForwardPassData> &forwardPassResults) {
+
+  // Initialize a vector to sum up all the errors.
+  Eigen::VectorXd sumError = Eigen::VectorXd::Zero(
+      forwardPassResults.front().activatedOutputs.back().size());
+
+  // Loop through all the forward pass results and accumulate errors.
+  for (size_t i = 0; i < forwardPassResults.size(); ++i) {
+    sumError +=
+        forwardPassResults[i].activatedOutputs.back() - batchTargetOutput[i];
+  }
+
+  // Calculate the average error by dividing by the number of samples.
+  Eigen::VectorXd averageError =
+      sumError / static_cast<double>(forwardPassResults.size());
+
+  return averageError;
+}
+
+std::vector<Eigen::MatrixXd> NeuralNetwork::propagateBatchErrorBackward(
+    const Eigen::MatrixXd &batchOutputErrors,
+    const std::vector<ForwardPassData> &batchFpData) {
+  // This vector will hold a matrix for each layer's errors in the batch.
+  std::vector<Eigen::MatrixXd> batchLayerErrors;
+
+  // Initialize the first set of errors (for the output layer) directly from the
+  // output errors.
+  batchLayerErrors.push_back(batchOutputErrors);
+
+  // Iterate backwards through the layers, starting from the second-to-last
+  // layer.
+  for (int i = layers.size() - 2; i >= 0; --i) {
+    // The derivative matrix for the current layer has the same dimensions as
+    // the layer's output.
+    Eigen::MatrixXd derivatives =
+        batchFpData.front()
+            .rawOutputs[i + 1]
+            .unaryExpr([&](double val) {
+              return layers[i + 1].getActivationFunctionPrime()(val);
+            })
+            .replicate(1, batchFpData.size());
+
+    // The error for the current layer is calculated using the weighted sum of
+    // the previous layer's errors.
+    Eigen::MatrixXd currentError =
+        (layers[i + 1].getWeights().transpose() * batchLayerErrors.back())
+            .cwiseProduct(derivatives);
+
+    // Since we're dealing with a batch, we sum the errors across all samples in
+    // the batch.
+    Eigen::MatrixXd summedError = currentError.rowwise().sum();
+
+    // Add the summed error matrix for this layer to our vector.
+    batchLayerErrors.push_back(summedError);
+  }
+
+  // Reverse the order of the layer errors to match the forward pass.
+  std::reverse(batchLayerErrors.begin(), batchLayerErrors.end());
+
+  return batchLayerErrors;
+}
+
+// Eigen::VectorXd
+// NeuralNetwork::computeOutputError(const Eigen::VectorXd &targetOutput,
+//                                   const ForwardPassData &fpData) {
+//   return fpData.activatedOutputs.back() - targetOutput;
+// }

@@ -2,6 +2,7 @@
 #include "parser.h"
 #include <cmath> // for std::exp
 #include <iostream>
+#include <vector> // for creating batches
 
 int main() {
   // 1. Data Parsing
@@ -25,24 +26,34 @@ int main() {
                "and output layer of 10 neurons"
             << std::endl;
 
-  // 3. Initial Forward Pass
-  ForwardPassData fpd = nn.forwardPass(images.row(0));
+  // Create batches for training
+  const int batchSize = 100; // Modify as needed
+  std::vector<Eigen::VectorXd> batchInputData;
+  std::vector<Eigen::VectorXd> batchTargetOutput;
 
-  Eigen::VectorXd targetOutput = Eigen::VectorXd::Zero(10);
-  std::cout << "Expected value: " << labels(0) << std::endl;
-  targetOutput(static_cast<int>(labels(0))) =
-      1.0; // One-hot encoding the target label
+  std::cout << "starting loop for the batcj" << std::endl;
+  for (int i = 0; i < images.rows(); i += batchSize) {
 
-  Eigen::VectorXd initialError = targetOutput - fpd.activatedOutputs.back();
-  std::cout << "Initial error: " << initialError.norm() << std::endl;
+    batchInputData.clear();
+    batchTargetOutput.clear();
+    for (int j = i; j < i + batchSize && j < images.rows(); j++) {
+      batchInputData.push_back(images.row(j));
+      Eigen::VectorXd target = Eigen::VectorXd::Zero(10);
+      target(static_cast<int>(labels(j))) = 1.0;
+      batchTargetOutput.push_back(target);
+    }
 
-  // 4. Backpropagation
-  nn.backpropagate(targetOutput, fpd);
+    // Batch Backpropagation
+    nn.batchBackPropagate(batchInputData, batchTargetOutput);
+  }
 
-  // 5. Forward Pass after Backpropagation
+  // Evaluate the Neural Network after training
   ForwardPassData fpdAfterBP = nn.forwardPass(images.row(0));
+  Eigen::VectorXd targetOutput = Eigen::VectorXd::Zero(10);
+  targetOutput(static_cast<int>(labels(0))) = 1.0;
   Eigen::VectorXd newError = targetOutput - fpdAfterBP.activatedOutputs.back();
-  std::cout << "Error after backpropagation: " << newError.norm() << std::endl;
+  std::cout << "Error after batch backpropagation: " << newError.norm()
+            << std::endl;
 
   return 0;
 }
