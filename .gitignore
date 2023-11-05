@@ -11,3 +11,5 @@ Models/recurrent_neural_network/data/
 Models/recurrent_neural_network/models/cache/rnn_model.h5
 Models/recurrent_neural_network/models/cache/training_history.npy
 *.pyc
+Models/long_short_term_memory/env/
+*.csv

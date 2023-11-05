@@ -139,16 +139,6 @@ void NeuralNetwork::batchBackPropagate(
     batchOutputErrors.col(i) = activatedOutput - batchTargetOutput[i];
   }
 
-  // Now, propagate the errors backward
-  // [The function propagateBatchErrorBackward needs to be defined to handle the
-  // error propagation]
-
-  // Accumulate gradients for weights and biases here
-  // [You'll need to implement the logic for this part]
-
-  // Update weights and biases here
-  // [You'll need to implement the logic for this part]
-
   // Output the average error for logging purposes
   Eigen::VectorXd averageError = batchOutputErrors.rowwise().mean();
   std::cout << "Average Error for the batch:" << std::endl
