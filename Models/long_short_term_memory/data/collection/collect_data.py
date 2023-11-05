@@ -1,5 +1,6 @@
 import yfinance as yf
 import os
+from datetime import date
 
 
 def download_and_save_data(file_path, ticker, start_date, end_date, interval="1d"):
@@ -12,10 +13,8 @@ def download_and_save_data(file_path, ticker, start_date, end_date, interval="1d
 
 def download_aapl_data():
     training_file_path = "data/storage/AAPL_training_data.csv"
-    validation_file_path = "data/storage/AAPL_validation_data.csv"
 
-    download_and_save_data(training_file_path, "AAPL", "2013-01-01", "2022-01-01")
-    download_and_save_data(validation_file_path, "AAPL", "2023-01-01", "2023-09-01")
+    download_and_save_data(training_file_path, "AAPL", "2010-01-01", date.today())
 
 
 if __name__ == "__main__":
